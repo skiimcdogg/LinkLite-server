@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .views.auth_views import RegisterView, VerifyEmail
+from .views.auth_views import RegisterView, VerifyEmail, LogoutView
 
 link_reducer_patterns = [
     path('shorten-url', views.shorten_url, name='shorten_url'),
@@ -14,6 +14,7 @@ auth_patterns = [
     path('api/login/', TokenObtainPairView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/verify-email/', VerifyEmail.as_view(), name='verify_email'),
+    path('api/logout/', LogoutView.as_view(), name='logout'),
 ]
 
 url_patterns = link_reducer_patterns + auth_patterns
