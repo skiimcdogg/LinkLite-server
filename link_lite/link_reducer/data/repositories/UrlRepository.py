@@ -1,2 +1,3 @@
 class UrlRepository:
-    pass
+    def get_all():
+        pass
