@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import URL
+from ..models import URL
 
 def shorten_url(request):
     return HttpResponse("Hello")
