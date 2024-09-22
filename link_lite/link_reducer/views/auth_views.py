@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from django.core.mail import send_mail
+from django.conf import settings
 from ..serializers.auth_serializer   import RegisterSerializer
 
 
@@ -30,11 +31,15 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         token = RefreshToken.for_user(user).access_token
+        verification_link = f"{settings.FRONTEND_URL}/verify-email?token={str(token)}" # [ ] Rajouter Lien front dans settings
+        
         send_mail(
             'Confirmez votre email',
-            f'Cliquez sur ce lien pour confirmer votre email : http://localhost:8000/api/verify-email/?token={token}',  # [ ] !! à modifier et aussi pour prod
+            f'Cliquez sur ce lien pour confirmer votre email : {verification_link}',
             'from@example.com',
+            settings.DEFAULT_FROM_EMAIL,
             [user.email],
+            fail_silently=False,
         )
         return Response({'detail': 'Vérifiez votre email pour confirmer votre inscription.'}, status=status.HTTP_201_CREATED)
 
@@ -51,3 +56,17 @@ class VerifyEmail(generics.GenericAPIView):
             return Response({'detail': 'Email confirmé avec succès.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': 'Lien de confirmation invalide ou expiré.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+    
+class UserDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+
+        return Response({
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name
+        })
