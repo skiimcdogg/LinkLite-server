@@ -18,4 +18,4 @@ auth_patterns = [
     path('api/logout/', LogoutView.as_view(), name='logout'),
 ]
 
-url_patterns = link_reducer_patterns + auth_patterns
+urlpatterns = link_reducer_patterns + auth_patterns
