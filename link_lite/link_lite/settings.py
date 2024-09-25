@@ -73,7 +73,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # [ ] changer PORT pour le front
+    "http://localhost:3001",  # [ ] changer PORT pour le front
 ]
 
 ROOT_URLCONF = 'link_lite.urls'
