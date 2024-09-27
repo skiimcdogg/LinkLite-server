@@ -12,10 +12,22 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+env_file = os.path.join(BASE_DIR, '.env')
 
+# Lire le fichier .env
+if os.path.isfile(env_file):
+    print(".env file found")
+    environ.Env.read_env(env_file)
+else:
+    print(f"No .env file found at {env_file}") # [ ] Comment for prd
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -24,10 +36,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ubo&bcc%bhx5zs@kqx45owwjxmutmv!2uc@nb6bcmbe7di6+x-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True # [ ] False pour la prod
 
 ALLOWED_HOSTS = []
 
+FRONTEND_URL = "http://localhost:3001"
 
 # Application definition
 
@@ -48,6 +61,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth', 
     'axes',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +82,19 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': env('SIGNING_KEY'),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'JTI_CLAIM': 'jti',
+}
+
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_CALLABLE = None
@@ -79,8 +106,16 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3001",  # [ ] changer PORT pour le front
+    env("FRONTEND_URL"),  # [ ] changer PORT pour le front
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'linklite.noreply@gmail.com'
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD') # [ ] RETIRER AVANT PROD
+DEFAULT_FROM_EMAIL = 'linklite.noreply@gmail.com'
 
 ROOT_URLCONF = 'link_lite.urls'
 
