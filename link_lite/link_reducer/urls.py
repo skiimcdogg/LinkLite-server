@@ -5,7 +5,7 @@ from .views.auth_views import RegisterView, VerifyEmail, LogoutView, UserDetailV
 
 link_reducer_patterns = [
     path('shorten-url', views.shorten_url, name='shorten_url'),
-    path('list-user-urls', views.get_all_urls_from_user, name='list_urls'),
+    path('list-user-urls/', views.get_all_urls_from_user, name='list_urls'),
     path('<str:short_url>', views.redirect_url, name='redirect_url'),
 ]
 

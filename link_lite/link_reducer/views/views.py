@@ -4,16 +4,20 @@ from ..models import URL
 from ..services.UrlShortenService import UrlShortenService
 from ..presenter.UrlPresenter import UrlPresenter
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 def shorten_url(request):
     if request.method == 'POST':
         original_url = request.POST.get('original_url')
-        user = request.user if request.user.is_authenticated() else None
+        user = request.user if request.user.is_authenticated else None
 
         short_url = UrlShortenService.create_short_url(original_url, user)
 
     return HttpResponse(f"Short URL created -> {short_url}")
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_urls_from_user(request):
     user = request.user
 

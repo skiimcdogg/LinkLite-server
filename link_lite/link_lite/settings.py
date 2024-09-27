@@ -38,7 +38,7 @@ SECRET_KEY = 'django-insecure-ubo&bcc%bhx5zs@kqx45owwjxmutmv!2uc@nb6bcmbe7di6+x-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # [ ] False pour la prod
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["http://localhost:3001", "localhost:8000", "localhost"] # [ ]  Mettre les url autorisée pour la prd !!!
 
 FRONTEND_URL = "http://localhost:3001"
 
