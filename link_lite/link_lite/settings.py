@@ -38,7 +38,7 @@ SECRET_KEY = 'django-insecure-ubo&bcc%bhx5zs@kqx45owwjxmutmv!2uc@nb6bcmbe7di6+x-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # [ ] False pour la prod
 
-ALLOWED_HOSTS = ["http://localhost:3001", "localhost:8000", "localhost"] # [ ]  Mettre les url autorisée pour la prd !!!
+ALLOWED_HOSTS = ["http://localhost:3001", "localhost:8000", "localhost", "127.0.0.1"] # [ ]  Mettre les url autorisée pour la prd !!!
 
 FRONTEND_URL = "http://localhost:3001"
 
@@ -84,7 +84,7 @@ AUTHENTICATION_BACKENDS = [
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(seconds=30),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
@@ -105,8 +105,20 @@ REST_FRAMEWORK = {
     ],
 }
 
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
-    env("FRONTEND_URL"),  # [ ] changer PORT pour le front
+    "http://localhost:3001",  # [ ] changer PORT pour le front
+]
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'x-csrftoken',
+    'authorization',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3001",
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

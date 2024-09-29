@@ -5,7 +5,13 @@ from ..services.UrlShortenService import UrlShortenService
 from ..presenter.UrlPresenter import UrlPresenter
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework.permissions import IsAuthenticated
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    print(request)
+    return JsonResponse({'detail': 'CSRF cookie set.'})
 
 def shorten_url(request):
     if request.method == 'POST':
