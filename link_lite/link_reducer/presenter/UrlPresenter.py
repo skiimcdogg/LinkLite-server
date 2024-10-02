@@ -9,7 +9,7 @@ class UrlPresenter:
         urls_data = UrlRepository.get_all_url_from_user(user)
 
         url_entities = [
-            UrlEntity(url.id, url.short_url, url.original_url, url.created.url)
+            UrlEntity(url.id, url.short_url, url.original_url, url.created_at)
             for url in urls_data
         ]
 
