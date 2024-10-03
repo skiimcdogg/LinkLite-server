@@ -62,17 +62,15 @@ def redirect_url(request, short_url):
     except Exception as e:
         return HttpResponse(f"Une erreur est survenue : {str(e)}", status=500)
     
-@login_required
 def delete_url(request, short_url):
     if request.method == 'DELETE':
         try:
-            url = get_object_or_404(URL, short_url=short_url, user=request.user)
-            
+            url = get_object_or_404(URL, short_url=short_url)
             url.delete()
-            return JsonResponse({'detail': 'URL supprimée avec succès.'}, status=200)
+            return JsonResponse({'detail': 'URL deleted successfully.'}, status=200)
         except URL.DoesNotExist:
-            return JsonResponse({'error': 'URL non trouvée ou vous n\'êtes pas autorisé à la supprimer.'}, status=404)
+            return JsonResponse({'error': 'URL not found or you\'re not auhorized.'}, status=404)
         except Exception as e:
-            return JsonResponse({'error': f'Une erreur est survenue : {str(e)}'}, status=500)
+            return JsonResponse({'error': f'An error occured : {str(e)}'}, status=500)
     else:
-        return JsonResponse({'error': 'Méthode non autorisée.'}, status=405)
+        return JsonResponse({'error': 'Method not allowed.'}, status=405)
